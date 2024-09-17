@@ -89,3 +89,42 @@ class SQLAlchemyCustomerRepository(CustomerRepository):
         self.db_session.commit()
         self.db_session.refresh(customer)
         return customer
+
+
+class SQLAlchemyOrderRepository(OrderRepository):
+    def __init__(self, db_session):
+        self.db_session = db_session
+
+    def create_order(self, order_data: OrderCreate) -> Order:
+        """Create a new order and return the created order object"""
+        try:
+            customer = (
+                self.db_session.query(Customer)
+                .filter(Customer.id == order_data.customer_id)
+                .one()
+            )
+        except NoResultFound:
+            raise ValueError(
+                f"Customer with id {order_data.customer_id} does not exist"
+            )
+
+        order = Order(**order_data.model_dump())
+        self.db_session.add(order)
+        self.db_session.commit()
+        self.db_session.refresh(order)
+        return order
+
+    def get_order_by_id(self, order_id: int, customer_id: int) -> Optional[Order]:
+        """Retrieve an order by its ID for given customer"""
+        return (
+            self.db_session.query(Order)
+            .filter(Order.id == order_id)
+            .filter(Order.customer_id == customer_id)
+            .first()
+        )
+
+    def list_orders(self, customer_id: int) -> List[Order]:
+        """Retrieve all orders"""
+        return (
+            self.db_session.query(Order).filter(Order.customer_id == customer_id).all()
+        )
