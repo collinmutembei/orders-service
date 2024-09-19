@@ -1,5 +1,6 @@
 from fastapi import Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from src.adapters.auth import get_auth
 from src.adapters.database import Base, engine
 from src.config import settings
 from contextlib import asynccontextmanager
@@ -17,6 +18,16 @@ api = FastAPI(
     description="you know, for orders",
     version="1.0.0",
     lifespan=lifespan,
+    swagger_ui_init_oauth={
+        "usePkceWithAuthorizationCodeGrant": True,
+        "clientId": settings.OPENID_CONNECT_CLIENT_ID,
+        "scopes": ["openid", "profile", "email", "phone"],
+        "pkceMethod": "S256",
+    },
+    servers=[
+        {"url": "http://localhost:8000", "description": "Development environment"},
+    ],
+    root_path_in_servers=False,
 )
 
 api.add_middleware(
