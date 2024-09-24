@@ -1,0 +1,52 @@
+services:
+  orders-service:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../src/.env
+    environment:
+      DEBUG: ${DEBUG:-false}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:ordersdbpassword@orders-db:5432/orders}
+      KEYCLOAK_AUTH_SERVER_URL: ${KEYCLOAK_AUTH_SERVER_URL:-http://localhost:8080/realms/sso/protocol/openid-connect/auth}
+      KEYCLOAK_TOKEN_URL: ${KEYCLOAK_TOKEN_URL:-http://localhost:8080/realms/sso/protocol/openid-connect/token}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-sso}
+      KEYCLOAK_PUBLIC_KEY: ${KEYCLOAK_PUBLIC_KEY}
+      OPENID_CONNECT_URL: http://localhost:8080/realms/sso
+      OPENID_CONNECT_CLIENT_ID: orders-service
+      OPENID_CONNECT_CLIENT_SECRET: ${OPENID_CONNECT_CLIENT_SECRET}
+      AFRICASTALKING_USERNAME: ${AFRICASTALKING_USERNAME:-sandbox}
+      AFRICASTALKING_API_KEY: ${AFRICASTALKING_API_KEY}
+    depends_on:
+      - orders-db
+
+  orders-db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ordersdbpassword
+    volumes:
+      - orders_data:/var/lib/postgresql/data
+    
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.5
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./sso-realm.json:/opt/keycloak/data/import/realm-export.json
+    ports:
+      - "8080:8080"
+
+volumes:
+  orders_data:
+  keycloak_data:
