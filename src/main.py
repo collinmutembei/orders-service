@@ -2,6 +2,7 @@ from fastapi import Depends, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from src.adapters.auth import get_auth
 from src.adapters.database import Base, engine
+from src.api.routes import customers_router
 from src.config import settings
 from contextlib import asynccontextmanager
 
@@ -44,3 +45,8 @@ def pong():
     return {
         "message": "Welcome to the Order Service API. Visit /docs for documentation."
     }
+
+
+api.include_router(
+    customers_router, dependencies=[Depends(get_auth)], tags=["customers"]
+)
