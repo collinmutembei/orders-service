@@ -12,3 +12,5 @@ restart-orders-svc:
 	@cd deployment && docker compose restart orders-service
 stop:
 	@cd deployment && docker compose down
+test:
+	@pytest --cov=./ --cov-report=html
