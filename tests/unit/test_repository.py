@@ -1,5 +1,8 @@
+from faker import Faker
 from src.ports.repository import SQLAlchemyCustomerRepository, SQLAlchemyOrderRepository
 from src.adapters.database import get_db
+
+faker = Faker()
 
 
 def test_create_customer(test_customer_data):
@@ -35,7 +38,7 @@ def test_get_customer_by_id_not_found():
     assert customer is None
 
 
-def test_customer_by_phone(test_customer_data):
+def test_get_customer_by_phone(test_customer_data):
     db = next(get_db())
     repository = SQLAlchemyCustomerRepository(db)
 
@@ -58,6 +61,19 @@ def test_customer_by_code(test_customer_data):
         assert customer.code == test_customer.code
         assert customer.name == test_customer.name
         assert customer.phone == test_customer.phone
+
+
+def test_update_customer_phone(test_customer_data):
+    db = next(get_db())
+    repository = SQLAlchemyCustomerRepository(db)
+    phone_number = faker.basic_phone_number()
+    existing_customer = repository.create_customer(test_customer_data[0])
+
+    updated_customer = repository.update_customer_phone(
+        existing_customer.id, phone_number
+    )
+
+    assert updated_customer.phone == phone_number
 
 
 def test_create_order(test_order_data):
