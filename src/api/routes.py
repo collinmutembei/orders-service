@@ -50,7 +50,7 @@ def create_order(
         item=order.item, amount=order.amount, customer_id=customer.id
     )
     order = service.create_order(customer_order)
-    if order.customer.phone:
+    if order.customer and customer.phone:
         background_tasks.add_task(
             service.sms_sender.send_sms,
             order.customer.phone,

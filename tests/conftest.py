@@ -4,12 +4,6 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from src.services.customer_service import CustomerService
-from src.services.order_service import OrderService
-from src.ports.repository import (
-    SQLAlchemyCustomerRepository,
-    SQLAlchemyOrderRepository,
-)
 from src.schemas.order import OrderCreate
 from src.schemas.customer import CustomerCreate
 
@@ -49,6 +43,15 @@ def authencation_data():
 
 def authenticated_user():
     return Customer(id=1, code="user123", name="John Doe", phone="1234567890")
+
+
+@pytest.fixture(scope="module")
+def test_db():
+    db = TestingSessionLocal()
+    Base.metadata.create_all(bind=engine)
+    yield db
+    Base.metadata.drop_all(bind=engine)
+    db.close()
 
 
 @pytest.fixture
@@ -95,4 +98,9 @@ def test_order_data(test_customer_data):
 
 @pytest.fixture
 def mock_order_service():
+    return MagicMock()
+
+
+@pytest.fixture
+def mock_customer_service():
     return MagicMock()

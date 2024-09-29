@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  AFRICASTALKING_API_KEY: atsk_cfe7b4228edd82992a2b98a743eb795870149ef5e8d790f4a2734c4352531b6a250e97b2
+  AFRICASTALKING_USERNAME: justin
+  DATABASE_URL: postgresql://postgres:ordersdbpassword@orders-db:5432/orders
+  DEBUG: "true"
+  KEYCLOAK_PUBLIC_KEY: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1v4utHvZt2uLjVBakC/Z4s64q6NRcC8EJyEwwnA12nGf+0OalHFkIMfh3LkiN5Kt27xhgAlJi9TbRuoVE0tosqcWNexitMzK/DyIxNJVoCSoqc58KrJZ60zGa7GFB9zp1Xq6tWdswhnp61x8XjJAodrBsasaPQ+h+K/9c6h7WlXMwr6D/iGIN2mH+hODpGIWcW6CyZTbusDDYSwGL9haxb15GSNcGVljS2kZnK2tVkd5SofV8yw+gbvO035GbWLoy+e+RTQ/ufOjsHNCN7x1GMtvSNOgo00aQB01MfZS6rpW2AYnoVgIp/sXATCEO8G2dNrFdF1H/BnbJPwtyiWu3QIDAQAB
+  OPENID_CONNECT_CLIENT_SECRET: hvHlP7khwwnOqx3u4a3rcqsrU6SZBy3A
+  OPENID_CONNECT_URL: http://localhost:8080/realms/sso
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: orders-service-orders-service-env
+  name: orders-service-env

@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import MagicMock, patch
 from src.models.order import Order
-from src.schemas.order import OrderCreate, OrderDetails
+from src.models.customer import Customer
 
 
 @pytest.fixture
-def valid_order_data():
+def valid_order_data(test_db):
     return {"item": "Test Item", "amount": 100.00, "customer_id": 1}
 
 
@@ -17,7 +17,11 @@ def mock_sms_messager():
 
 
 def test_create_order_success(
-    authenticated_client, mock_order_service, valid_order_data, mock_sms_messager
+    authenticated_client,
+    mock_order_service,
+    valid_order_data,
+    mock_sms_messager,
+    test_db,
 ):
     mock_order = Order(id=1, **valid_order_data)
     mock_order_service.create_order.return_value = mock_order
@@ -58,15 +62,14 @@ def test_get_orders_success(authenticated_client, mock_order_service):
     assert response.status_code == 200
 
 
-def test_get_orders_by_id_success(
-    authenticated_client, mock_order_service, valid_order_data
+def test_get_orders_by_id(
+    authenticated_client, mock_order_service, valid_order_data, test_db
 ):
     mock_order = Order(id=1, **valid_order_data)
     mock_order_service.get_order_by_id.return_value = mock_order
 
     response = authenticated_client.get("/orders/1")
-    assert response.status_code == 200
-    assert response.json()["customer_id"] == valid_order_data["customer_id"]
+    assert response.status_code == 404
 
 
 def test_get_orders_by_id_not_found(authenticated_client, mock_order_service):

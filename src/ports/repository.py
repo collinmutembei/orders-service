@@ -97,16 +97,6 @@ class SQLAlchemyOrderRepository(OrderRepository):
 
     def create_order(self, order_data: OrderCreate) -> Order:
         """Create a new order and return the created order object"""
-        try:
-            customer = (
-                self.db_session.query(Customer)
-                .filter(Customer.id == order_data.customer_id)
-                .one()
-            )
-        except NoResultFound:
-            raise ValueError(
-                f"Customer with id {order_data.customer_id} does not exist"
-            )
 
         order = Order(**order_data.model_dump())
         self.db_session.add(order)

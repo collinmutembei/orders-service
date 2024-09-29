@@ -5,9 +5,8 @@ from src.adapters.database import get_db
 faker = Faker()
 
 
-def test_create_customer(test_customer_data):
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_create_customer(test_db, test_customer_data):
+    repository = SQLAlchemyCustomerRepository(test_db)
 
     for test_customer in test_customer_data:
         customer = repository.create_customer(test_customer)
@@ -17,9 +16,8 @@ def test_create_customer(test_customer_data):
         assert customer.code == test_customer.code
 
 
-def test_get_customer_by_id(test_customer_data):
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_get_customer_by_id(test_db, test_customer_data):
+    repository = SQLAlchemyCustomerRepository(test_db)
 
     for test_customer in test_customer_data:
         customer_in_db = repository.create_customer(test_customer)
@@ -30,17 +28,15 @@ def test_get_customer_by_id(test_customer_data):
         assert customer.phone == test_customer.phone
 
 
-def test_get_customer_by_id_not_found():
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_get_customer_by_id_not_found(test_db):
+    repository = SQLAlchemyCustomerRepository(test_db)
 
     customer = repository.get_customer_by_id(9999)
     assert customer is None
 
 
-def test_get_customer_by_phone(test_customer_data):
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_get_customer_by_phone(test_db, test_customer_data):
+    repository = SQLAlchemyCustomerRepository(test_db)
 
     for test_customer in test_customer_data:
         customer_in_db = repository.create_customer(test_customer)
@@ -50,9 +46,8 @@ def test_get_customer_by_phone(test_customer_data):
         assert customer.phone == test_customer.phone
 
 
-def test_customer_by_code(test_customer_data):
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_customer_by_code(test_db, test_customer_data):
+    repository = SQLAlchemyCustomerRepository(test_db)
 
     for test_customer in test_customer_data:
         customer_in_db = repository.create_customer(test_customer)
@@ -63,9 +58,8 @@ def test_customer_by_code(test_customer_data):
         assert customer.phone == test_customer.phone
 
 
-def test_update_customer_phone(test_customer_data):
-    db = next(get_db())
-    repository = SQLAlchemyCustomerRepository(db)
+def test_update_customer_phone(test_db, test_customer_data):
+    repository = SQLAlchemyCustomerRepository(test_db)
     phone_number = faker.basic_phone_number()
     existing_customer = repository.create_customer(test_customer_data[0])
 
@@ -76,9 +70,8 @@ def test_update_customer_phone(test_customer_data):
     assert updated_customer.phone == phone_number
 
 
-def test_create_order(test_order_data):
-    db = next(get_db())
-    repository = SQLAlchemyOrderRepository(db)
+def test_create_order(test_db, test_order_data):
+    repository = SQLAlchemyOrderRepository(test_db)
 
     for test_order in test_order_data:
         order = repository.create_order(test_order)
@@ -88,9 +81,8 @@ def test_create_order(test_order_data):
         assert order.customer_id == test_order.customer_id
 
 
-def test_get_order_by_id(test_order_data):
-    db = next(get_db())
-    repository = SQLAlchemyOrderRepository(db)
+def test_get_order_by_id(test_db, test_order_data):
+    repository = SQLAlchemyOrderRepository(test_db)
 
     for test_order in test_order_data:
         order_in_db = repository.create_order(test_order)
