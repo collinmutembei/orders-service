@@ -1,0 +1,19 @@
+fastapi
+uvicorn
+pydantic-settings
+python-decouple
+python-jose
+python-multipart
+python-keycloak
+sqlalchemy
+alembic
+psycopg2-binary
+africastalking
+# dev
+pytest
+pytest-cov
+pytest-asyncio
+black
+httpx
+ipdb
+faker
