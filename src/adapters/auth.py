@@ -67,7 +67,7 @@ async def get_current_user(
         customer_data = CustomerCreate(
             code=identity.get("sub"),
             name=identity.get("name"),
-            phone=identity.get("phone"),
+            phone=identity.get("phone_number"),
         )
         customer = customer_service.create_customer(customer_data)
     return customer
